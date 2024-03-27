@@ -1,13 +1,11 @@
-import React, { createContext } from "react";
+import React, { Suspense, lazy } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import Header from "./components/Header/Header";
-import Lists from "./pages/Lists";
-import ListDetail from "./pages/ListDetail";
-import ListForm from "./pages/ListForm";
-import { ListsContextProvider } from "./context/ListsContext";
-import { ItemsContextProvider } from "./context/ItemsContext";
-
+import AppContext from "./context/AppContext";
+const Lists = lazy(() => import("./pages/Lists"));
+const ListDetail = lazy(() => import("./pages/ListDetail"));
+const ListForm = lazy(() => import("./pages/ListForm"));
 const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
@@ -31,15 +29,15 @@ function App() {
       <AppWrapper>
         <BrowserRouter>
           <Header />
-          <ListsContextProvider>
-            <ItemsContextProvider>
-              <Routes>
-                <Route path="/" element={<Lists />} />
-                <Route path="/list/:listId/new" element={<ListForm />} />
-                <Route path="/list/:listId" element={<ListDetail />} />
-              </Routes>
-            </ItemsContextProvider>
-          </ListsContextProvider>
+          <Suspense fallback={<div>Loading...</div>}>
+          <AppContext>
+            <Routes>
+              <Route path="/" element={<Lists />} />
+              <Route path="/list/:listId/new" element={<ListForm />} />
+              <Route path="/list/:listId" element={<ListDetail />} />
+            </Routes>
+          </AppContext>
+          </Suspense>
         </BrowserRouter>
       </AppWrapper>
     </>
