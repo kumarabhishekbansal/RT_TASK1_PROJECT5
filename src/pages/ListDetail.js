@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { useNavigate, useParams } from 'react-router-dom';
-import useDataFetching from '../hooks/useDataFetching';
-import NavBar from '../components/NavBar/NavBar';
-import ListItem from '../components/ListItem/ListItem';
-
+import { useContext, useState, useEffect } from "react";
+import styled from "styled-components";
+import { useNavigate, useParams } from "react-router-dom";
+import NavBar from "../components/NavBar/NavBar";
+import ListItem from "../components/ListItem/ListItem";
+import ItemsContext from "../context/ItemsContext";
 const ListItemWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -16,17 +15,10 @@ function ListDetail() {
   let navigate = useNavigate();
   const { listId } = useParams();
 
-  const [loading, error, data] = useDataFetching(
-    'https://my-json-server.typicode.com/PacktPublishing/React-Projects-Second-Edition/items/',
-  );
-
-  const [items, setItems] = useState([]);
-
+  const { loading, error, items, fetchItems } = useContext(ItemsContext);
   useEffect(() => {
-    data &&
-      listId &&
-      setItems(data.filter((item) => item.listId === parseInt(listId)));
-  }, [data, listId]);
+    listId && !items.length && fetchItems(listId);
+  }, [fetchItems, items, listId]);
 
   return (
     <>
@@ -38,7 +30,7 @@ function ListDetail() {
       )}
       <ListItemWrapper>
         {loading || error ? (
-          <span>{error || 'Loading...'}</span>
+          <span>{error || "Loading..."}</span>
         ) : (
           items.map((item) => <ListItem key={item.id} data={item} />)
         )}

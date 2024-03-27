@@ -1,10 +1,12 @@
-import React from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
-import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import Header from './components/Header/Header';
-import Lists from './pages/Lists';
-import ListDetail from './pages/ListDetail';
-import ListForm from './pages/ListForm';
+import React, { createContext } from "react";
+import styled, { createGlobalStyle } from "styled-components";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
+import Header from "./components/Header/Header";
+import Lists from "./pages/Lists";
+import ListDetail from "./pages/ListDetail";
+import ListForm from "./pages/ListForm";
+import { ListsContextProvider } from "./context/ListsContext";
+import { ItemsContextProvider } from "./context/ItemsContext";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -29,11 +31,15 @@ function App() {
       <AppWrapper>
         <BrowserRouter>
           <Header />
-          <Routes>
-            <Route path='/' element={<Lists />} />
-            <Route path='/list/:listId/new' element={<ListForm />} />
-            <Route path='/list/:listId' element={<ListDetail />} />
-          </Routes>
+          <ListsContextProvider>
+            <ItemsContextProvider>
+              <Routes>
+                <Route path="/" element={<Lists />} />
+                <Route path="/list/:listId/new" element={<ListForm />} />
+                <Route path="/list/:listId" element={<ListDetail />} />
+              </Routes>
+            </ItemsContextProvider>
+          </ListsContextProvider>
         </BrowserRouter>
       </AppWrapper>
     </>

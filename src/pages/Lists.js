@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import useDataFetching from '../hooks/useDataFetching';
+import { useContext } from 'react';
 import NavBar from '../components/NavBar/NavBar';
-
+import ListsContext from '../context/ListsContext';
 const ListWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -29,10 +29,7 @@ const Title = styled.h3`
 
 const Lists = () => {
   let navigate = useNavigate();
-
-  const [loading, error, data] = useDataFetching(
-    'https://my-json-server.typicode.com/PacktPublishing/React-Projects-Second-Edition/lists',
-  );
+  const { loading, error, lists } =useContext(ListsContext);
 
   return (
     <>
@@ -41,7 +38,7 @@ const Lists = () => {
         {loading || error ? (
           <span>{error || 'Loading...'}</span>
         ) : (
-          data.map((list) => (
+          lists.map((list) => (
             <ListLink key={list.id} to={`list/${list.id}`}>
               <Title>{list.title}</Title>
             </ListLink>
