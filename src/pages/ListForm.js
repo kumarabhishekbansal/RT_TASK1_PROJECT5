@@ -40,7 +40,7 @@ function ListForm() {
     <>
       {navigate && <NavBar goBack={() => navigate(-1)} title={`Add Item`} />}
       <FormWrapper>
-        <form onSubmit={onSubmit}>>
+        <form onSubmit={onSubmit}>
           <FormItem
             id="title"
             label="Title"
