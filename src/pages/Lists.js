@@ -1,8 +1,8 @@
-import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import NavBar from '../components/NavBar/NavBar';
-import ListsContext from '../context/ListsContext';
+import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import NavBar from "../components/NavBar/NavBar";
+import ListsContext from "../context/ListsContext";
 const ListWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -29,14 +29,16 @@ const Title = styled.h3`
 
 const Lists = () => {
   let navigate = useNavigate();
-  const { loading, error, lists } =useContext(ListsContext);
-
+  const { loading, error, lists, fetchLists } = useContext(ListsContext);
+  useEffect(() => {
+    !lists.length && fetchLists();
+  }, [fetchLists, lists]);
   return (
     <>
-      {navigate && <NavBar title='Your Lists' />}
+      {navigate && <NavBar title="Your Lists" />}
       <ListWrapper>
         {loading || error ? (
-          <span>{error || 'Loading...'}</span>
+          <span>{error || "Loading..."}</span>
         ) : (
           lists.map((list) => (
             <ListLink key={list.id} to={`list/${list.id}`}>
